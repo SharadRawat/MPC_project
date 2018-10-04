@@ -1,3 +1,20 @@
+### Model Predictive Control Project
+This repository contains my solution to the Udacity SDCND MPC Project. The goal of this project is to navigate a track in a Udacity-provided simulator. The solution must be robust to 100ms latency, as one may encounter in real-world application.
+
+This solution, as the Nanodegree lessons suggest, makes use of the IPOPT and CPPAD libraries to calculate an optimal trajectory and its associated actuation commands in order to minimize error with a third-degree polynomial fit to the given waypoints. The optimization considers only a short duration's worth of waypoints, and produces a trajectory for that duration based upon a model of the vehicle's kinematics and a cost function based mostly on the vehicle's cross-track error (roughly the distance from the track waypoints) and orientation angle error, with other cost factors included to improve performance.
+
+#### Model
+The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.
+
+#### Timestep Length and Elapsed Duration (N & dt):
+The values chosen for N and dt are 10 and 0.1, respectively. These were suggested values of Udacity's provided office hours for the project. These values mean that the optimizer is considering a one-second duration in which to determine a corrective trajectory. Adjusting either N or dt (even by small amounts) often produced erratic behavior. 
+
+#### Polynomial Fitting and MPC Preprocessing: 
+The waypoints are preprocessed by transforming (trasnlating and rotating) them to the vehicle's perspective making the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero. This simplifies the process to fit a polynomial to the waypoints.
+
+#### Model Predictive Control with Latency:
+With a delay of 100ms (which happens to be the timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. The `a` and `delta` variable are assigned a value of their previous timestep which accomodates the latency.
+
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
