@@ -153,22 +153,22 @@ double epsi = state[5];
     vars[i] = 0;
   }
 
-  Dvector var_lowerbound(n_vars);
-  Dvector var_upperbound(n_vars);
+  Dvector vars_lowerbound(n_vars);
+  Dvector vars_upperbound(n_vars);
   // TODO: Set lower and upper limits for variables.
 for (int i=0;i<delta_start;i++){
-	var_lowerbound[i] = -1.0e19;
-	var_upperbound[i] = 1.0e19;
+	vars_lowerbound[i] = -1.0e19;
+	vars_upperbound[i] = 1.0e19;
 }
 
 for (int i=delta_start;i<a_start;i++){
-	var_lowerbound[i] = -0.436332*Lf;
-	var_upperbound[i] = 0.436332*Lf;
+	vars_lowerbound[i] = -0.436332*Lf;
+	vars_upperbound[i] = 0.436332*Lf;
 }
 
 for (int i=a_start;i<n_vars;i++){
-	var_lowerbound[i] = -1;
-	var_upperbound[i] = 1;
+	vars_lowerbound[i] = -1;
+	vars_upperbound[i] = 1;
 }
 
   // Lower and upper limits for the constraints
