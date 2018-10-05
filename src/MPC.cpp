@@ -90,7 +90,8 @@ for (int t = 1; t < N; t++) {
   // Only consider the actuation at time t.
   AD<double> delta0 = vars[delta_start + t - 1];
   AD<double> a0 = vars[a_start + t - 1];
-  if (t > 1) {   // use previous actuations (to account for latency)
+  // To account for latency
+  if (t > 1) {  
         a0 = vars[a_start + t - 2];
         delta0 = vars[delta_start + t - 2];
       }
