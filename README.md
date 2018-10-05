@@ -4,14 +4,14 @@ In this project, MPC, an advanced control technique, is implemented to control t
 #### Model
 The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Acceleration and delta (steering angle) are the actuations from the controller. Positive acceleration variable values symbolise an acceleration. Negative acceleration value represent a brake. The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.The model is described below: 
 `
-px = px + v * cos(psi) * dt
-py = py + v * sin(psi) ( dt)
-psi = psi + v / Lf * (-delta) * dt
-v = v + a * dt
-cte = cte - v * sin(epsi) * dt
-epsi = epsi +  v / Lf * (-delta) * dt
+	px = px + v * cos(psi) * dt
+	py = py + v * sin(psi) ( dt)
+	psi = psi + v / Lf * (-delta) * dt
+	v = v + a * dt
+	cte = cte - v * sin(epsi) * dt
+	epsi = epsi +  v / Lf * (-delta) * dt
 
-Lf - this is the length from front of vehicle to its Center-of-Gravity
+	Lf - Length from front of vehicle to its CG
 `
 
 #### Timestep Length and Elapsed Duration (N & dt):
@@ -20,7 +20,7 @@ N -> How far ahead in time do we want to algorithm to compute the actuations. Th
 #### Polynomial Fitting and MPC Preprocessing: 
 The waypoints are preprocessed by transforming (translating and rotating) them to the vehicle's perspective making the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero. This simplifies the process to fit a polynomial to the waypoints. Polyfit is employed to finally fit a polynomial to thesse points. Equations used are :
 
-`for(unsigned int t=0; t < ptsx.size(); i++){
+`	for(unsigned int t=0; t < ptsx.size(); i++){
 	double shift_x = ptsx[t] -px;
 	double shift_y = ptsy[t] -py;
 	
@@ -32,10 +32,10 @@ The waypoints are preprocessed by transforming (translating and rotating) them t
 #### Model Predictive Control with Latency:
 With a delay of 100ms (which is same as timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. The `a` and `delta` variable are assigned a value of their previous timestep which accomodates the latency.
 `
-if (t > 1) {  
-   a = vars[a_start+t-2];
-   delta = vars[delta_start+t-2];
-      }
+	if (t > 1) {  
+   	a = vars[a_start+t-2];
+   	delta = vars[delta_start+t-2];
+      	}
 `
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
