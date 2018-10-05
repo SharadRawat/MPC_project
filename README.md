@@ -10,8 +10,9 @@ The kinematic model includes the vehicle's x and y coordinates, orientation angl
 	 v = v + a * dt
 	 cte = cte - v * sin(epsi) * dt
 	 epsi = epsi +  v / Lf * (-delta) * dt
-	 Lf - Length from front of vehicle to its CG
-`
+	 
+
+Lf - Length from front of vehicle to its CG
 
 #### Timestep Length and Elapsed Duration (N & dt):
 N -> How far ahead in time do we want to algorithm to compute the actuations. The greater the `N`, the greater the computations.  `dt` represents the time step in which we expect the environment changes. The values chosen for N and dt are 10 and 0.1, respectively. These were suggested values of Udacity's provided office hours for the project. Moreover, since `dt = 0.1` is also equal to the latency in the model, this seemed like an intuitive value to land on. When N was low (`4-8`), it seemed that the green was too short. If N is high `15`, this leads to more computation time.
