@@ -1,20 +1,41 @@
 ### Model Predictive Control Project
-This repository contains my solution to the Udacity SDCND MPC Project. The goal of this project is to navigate a track in a Udacity-provided simulator. The solution must be robust to 100ms latency, as one may encounter in real-world application.
-
-This solution, as the Nanodegree lessons suggest, makes use of the IPOPT and CPPAD libraries to calculate an optimal trajectory and its associated actuation commands in order to minimize error with a third-degree polynomial fit to the given waypoints. The optimization considers only a short duration's worth of waypoints, and produces a trajectory for that duration based upon a model of the vehicle's kinematics and a cost function based mostly on the vehicle's cross-track error (roughly the distance from the track waypoints) and orientation angle error, with other cost factors included to improve performance.
+In this project, MPC, an advanced control technique, is implemented to control the acceleration and steering by minimising a particular cost function. A pipeline was generated to drive a car around a track in the Unity simulator. A latency of 100 milliseconds between actuation commands on top of the connection latency is also incorporated in the pipeline.
 
 #### Model
-The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.
+The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Acceleration and delta (steering angle) are the actuations from the controller. Positive acceleration variable values symbolise an acceleration. Negative acceleration value represent a brake. The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.The model is described below: 
+
+`px = px + v * cos(psi) * dt
+py = py + v * sin(psi) ( dt)
+psi = psi + v / Lf * (-delta) * dt
+v = v + a * dt
+cte = cte - v * sin(epsi) * dt
+epsi = epsi +  v / Lf * (-delta) * dt
+
+Lf - this is the length from front of vehicle to its Center-of-Gravity`
 
 #### Timestep Length and Elapsed Duration (N & dt):
-The values chosen for N and dt are 10 and 0.1, respectively. These were suggested values of Udacity's provided office hours for the project. These values mean that the optimizer is considering a one-second duration in which to determine a corrective trajectory. Adjusting either N or dt (even by small amounts) often produced erratic behavior. 
+N -> How far ahead in time do we want to algorithm to compute the actuations. The greater the `N`, the greater the computations.  `dt` represents the time step in which we expect the environment changes. The values chosen for N and dt are 10 and 0.1, respectively. These were suggested values of Udacity's provided office hours for the project. Moreover, since `dt = 0.1` is also equal to the latency in the model, this seemed like an intuitive value to land on. When N was low (`4-8`), it seemed that the green was too short. If N is high `15`, this leads to more computation time.
 
 #### Polynomial Fitting and MPC Preprocessing: 
-The waypoints are preprocessed by transforming (trasnlating and rotating) them to the vehicle's perspective making the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero. This simplifies the process to fit a polynomial to the waypoints.
+The waypoints are preprocessed by transforming (translating and rotating) them to the vehicle's perspective making the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero. This simplifies the process to fit a polynomial to the waypoints. Polyfit is employed to finally fit a polynomial to thesse points. Equations used are :
+
+`for(unsigned int t=0; t < ptsx.size(); i++){
+	double shift_x = ptsx[t] -px;
+	double shift_y = ptsy[t] -py;
+	
+	ptsx[t] = (shift_x * cos(0-psi) - shift_y*sin(0-psi));
+	ptsy[t] = (shift_x * sin(0-psi) + shift_y*cos(0-psi));
+}`
+
 
 #### Model Predictive Control with Latency:
-With a delay of 100ms (which happens to be the timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. The `a` and `delta` variable are assigned a value of their previous timestep which accomodates the latency.
-
+With a delay of 100ms (which is same as timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. The `a` and `delta` variable are assigned a value of their previous timestep which accomodates the latency.
+`
+if (t > 1) {  
+   a = vars[a_start+t-1];
+   delta = vars[delta_start+t-1];
+      }
+`
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
