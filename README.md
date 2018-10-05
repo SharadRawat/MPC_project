@@ -3,8 +3,8 @@ In this project, MPC, an advanced control technique, is implemented to control t
 
 #### Model
 The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Acceleration and delta (steering angle) are the actuations from the controller. Positive acceleration variable values symbolise an acceleration. Negative acceleration value represent a brake. The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.The model is described below: 
-`
-	px = px + v * cos(psi) * dt
+
+`	px = px + v * cos(psi) * dt
 	py = py + v * sin(psi) ( dt)
 	psi = psi + v / Lf * (-delta) * dt
 	v = v + a * dt
