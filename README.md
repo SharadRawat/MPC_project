@@ -3,15 +3,16 @@ In this project, MPC, an advanced control technique, is implemented to control t
 
 #### Model
 The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Acceleration and delta (steering angle) are the actuations from the controller. Positive acceleration variable values symbolise an acceleration. Negative acceleration value represent a brake. The `state` vector consists of these 6 variables defining the state. These 6 states are defined by a combination of previous states and the actuator outputs.The model is described below: 
-
-`px = px + v * cos(psi) * dt
+`
+px = px + v * cos(psi) * dt
 py = py + v * sin(psi) ( dt)
 psi = psi + v / Lf * (-delta) * dt
 v = v + a * dt
 cte = cte - v * sin(epsi) * dt
 epsi = epsi +  v / Lf * (-delta) * dt
 
-Lf - this is the length from front of vehicle to its Center-of-Gravity`
+Lf - this is the length from front of vehicle to its Center-of-Gravity
+`
 
 #### Timestep Length and Elapsed Duration (N & dt):
 N -> How far ahead in time do we want to algorithm to compute the actuations. The greater the `N`, the greater the computations.  `dt` represents the time step in which we expect the environment changes. The values chosen for N and dt are 10 and 0.1, respectively. These were suggested values of Udacity's provided office hours for the project. Moreover, since `dt = 0.1` is also equal to the latency in the model, this seemed like an intuitive value to land on. When N was low (`4-8`), it seemed that the green was too short. If N is high `15`, this leads to more computation time.
@@ -32,8 +33,8 @@ The waypoints are preprocessed by transforming (translating and rotating) them t
 With a delay of 100ms (which is same as timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. The `a` and `delta` variable are assigned a value of their previous timestep which accomodates the latency.
 `
 if (t > 1) {  
-   a = vars[a_start+t-1];
-   delta = vars[delta_start+t-1];
+   a = vars[a_start+t-2];
+   delta = vars[delta_start+t-2];
       }
 `
 # CarND-Controls-MPC
